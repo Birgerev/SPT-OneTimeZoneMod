@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace OneTimeZone
 {
-	[BepInPlugin("dev.birgerev.OneTimeZone", "OneTimeZone", "1.0.0")]
+	[BepInPlugin("dev.birgerev.OneTimeZone", "OneTimeZone", "1.1.0")]
 	public class OneTimeZonePlugin : BaseUnityPlugin
 	{
 		public void Awake()
