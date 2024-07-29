@@ -3,6 +3,11 @@ using System.Linq;
 using HarmonyLib;
 using SPT.Reflection.Patching;
 using System.Reflection;
+using EFT.UI.Matchmaker;
+using TMPro;
+using EFT;
+using UnityEngine.UI;
+using UnityEngine;
 
 namespace OneTimeZone
 {
@@ -19,22 +24,30 @@ namespace OneTimeZone
     {
         protected override MethodBase GetTargetMethod()
         {
-            //Access method LocationSettingsClass.Location.Class816.method_0(bool x)
-            return AccessTools.GetDeclaredMethods(typeof(LocationSettingsClass.Location.Class816)).FirstOrDefault(method =>
-            {
-                var parameters = method.GetParameters();
-                return parameters.Length == 1 && parameters[0].ParameterType == typeof(string);
-            });
+            return typeof(LocationConditionsPanel).GetMethod("Set");
         }
 
         [PatchPostfix]
-        public static void Postfix(ref LocationSettingsClass.Location.Class816 __instance, ref bool __result, string x)
+        public static void Postfix(ref LocationConditionsPanel __instance, ref RaidSettings raidSettings, ref TextMeshProUGUI ____nextPhaseTime, ref Toggle ____amTimeToggle, ref Toggle ____pmTimeToggle)
         {
-            //bool __result returns whether we should show the timezone dialouge
-            //string x is the map name
+            if (raidSettings == null) return;
+            if (____nextPhaseTime == null) return;
+            if (____amTimeToggle == null) return;
+            if (____pmTimeToggle == null) return;
 
             //Only show dialouge on factory since time is static there
-            __result = x == "factory4_day" || x == "factory4_night";
+            bool allowSelectTimezone = raidSettings.LocationId == "factory4_day" || raidSettings.LocationId == "factory4_night";
+            
+            ____nextPhaseTime.alpha = allowSelectTimezone ? 1 : 0;
+            ____pmTimeToggle.targetGraphic.color = allowSelectTimezone ? new Color(1, 1, 1, 1) : new Color(0,0,0,0);
+            ____pmTimeToggle.interactable = allowSelectTimezone;
+
+            if (!allowSelectTimezone)
+            {
+                ____amTimeToggle.isOn = true;
+                ____pmTimeToggle.isOn = false;
+                raidSettings.SelectedDateTime = JsonType.EDateTime.CURR;
+            }
         }
     }
 }
