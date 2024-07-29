@@ -34,7 +34,9 @@ namespace OneTimeZone
             //string x is the map name
 
             //Only show dialouge on factory since time is static there
-            __result = x == "factory4_day" || x == "factory4_night";
+            bool allowSelectTimezone = x == "factory4_day" || x == "factory4_night";
+
+            __result = allowSelectTimezone;
         }
     }
 }
