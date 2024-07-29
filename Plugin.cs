@@ -30,6 +30,10 @@ namespace OneTimeZone
         [PatchPostfix]
         public static void Postfix(ref LocationConditionsPanel __instance, ref RaidSettings raidSettings, ref TextMeshProUGUI ____nextPhaseTime, ref Toggle ____amTimeToggle, ref Toggle ____pmTimeToggle)
         {
+            if (raidSettings == null) return;
+            if (____nextPhaseTime == null) return;
+            if (____amTimeToggle == null) return;
+            if (____pmTimeToggle == null) return;
 
             //Only show dialouge on factory since time is static there
             bool allowSelectTimezone = raidSettings.LocationId == "factory4_day" || raidSettings.LocationId == "factory4_night";
